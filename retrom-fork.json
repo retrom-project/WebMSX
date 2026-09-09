@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "forkRepository": "https://github.com/retrom-project/WebMSX",
+  "defaultBranch": "retrom/6.0.8",
+  "upstreamMirrorBranch": "master",
+  "upstreams": [
+    {
+      "role": "engine-baseline",
+      "repository": "https://github.com/ppeccin/WebMSX",
+      "refType": "TAG",
+      "ref": "v6.0.8",
+      "commit": "4f4009e86d3e0bb9be7dcd7f0a582b0cd411d660"
+    }
+  ],
+  "releaseTagPattern": "^retrom-core-6\\.0\\.8-r[1-9][0-9]*(-rc\\.[1-9][0-9]*)?$",
+  "adapterAbi": "webmsx-host-v1",
+  "releaseAssets": [
+    "webmsx.js",
+    "UPSTREAM-NOTICE.txt"
+  ]
+}
