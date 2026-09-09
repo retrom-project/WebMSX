@@ -4,7 +4,7 @@ WMSX.userROMFormats = {
 
     init: function() {
         wmsx.SlotCreator.setUserROMFormats(this);
-        this.userFormats = JSON.parse(localStorage.wmsxuserformats || "{}");
+        this.userFormats = WMSX.RETROM_HOST_MODE ? {} : JSON.parse(localStorage.wmsxuserformats || "{}");
     },
 
     getForROM: function(rom) {
@@ -16,6 +16,7 @@ WMSX.userROMFormats = {
         if (isAuto) delete this.userFormats[rom.info.h];
         else this.userFormats[rom.info.h] = formatName;
 
+        if (WMSX.RETROM_HOST_MODE) return;
         localStorage.wmsxuserformats = JSON.stringify(this.userFormats);
     }
 

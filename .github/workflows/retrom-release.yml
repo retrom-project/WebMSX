@@ -1,0 +1,46 @@
+name: Retrom Web Release
+on:
+  push:
+    tags: [retrom-core-6.0.8-r*]
+permissions:
+  contents: write
+concurrency:
+  group: retrom-web-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24.18.0
+      - name: Verify immutable maintenance tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF_NAME" =~ ^retrom-core-6\.0\.8-r[1-9][0-9]*(-rc\.[1-9][0-9]*)?$ ]]
+          remote_tag_ref="refs/retrom-release/$GITHUB_REF_NAME"
+          git fetch origin "refs/tags/$GITHUB_REF_NAME:$remote_tag_ref"
+          test "$(git cat-file -t "$remote_tag_ref")" = tag
+          test "$(git rev-list -n 1 "$remote_tag_ref")" = "$GITHUB_SHA"
+          git fetch --no-tags origin retrom/6.0.8
+          git merge-base --is-ancestor "$GITHUB_SHA" FETCH_HEAD
+          git merge-base --is-ancestor 4f4009e86d3e0bb9be7dcd7f0a582b0cd411d660 "$GITHUB_SHA"
+      - run: python3 -B -m unittest discover -s .github/rpg-runtime -p 'test_*.py'
+      - name: Build and check release assets
+        run: |
+          mkdir "$RUNNER_TEMP/webmsx-candidate"
+          bash .github/rpg-runtime/build-candidate.sh "$RUNNER_TEMP/webmsx-candidate"
+          python3 -B .github/rpg-runtime/release.py --candidate "$RUNNER_TEMP/webmsx-candidate" --output "$RUNNER_TEMP/webmsx-release" --tag "$GITHUB_REF_NAME" --tag-ref "refs/retrom-release/$GITHUB_REF_NAME"
+      - name: Publish immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          flags=()
+          if [[ "$GITHUB_REF_NAME" == *-rc.* ]]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" "$RUNNER_TEMP/webmsx-release/"* --verify-tag --generate-notes "${flags[@]}"

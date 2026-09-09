@@ -31,7 +31,7 @@ WMSX.start = function (machinePowerOn) {
         wmsx.ROMDatabase.uncompress();
 
         // Init KeepAlive
-        wmsx.NetClient.initKeepAlive();
+        if (!WMSX.RETROM_HOST_MODE) wmsx.NetClient.initKeepAlive();
 
         // NetPlay! auto-join Session?
         var joinSession = WMSX.NETPLAY_JOIN;

@@ -151,7 +151,7 @@ WMSX.userPreferences.load = function() {
 
     // Load from Local Storage
     try {
-        prefs = JSON.parse(localStorage["wmsxprefs" + this.getEnvSuffix()] || "{}");
+        prefs = WMSX.RETROM_HOST_MODE ? {} : JSON.parse(localStorage["wmsxprefs" + this.getEnvSuffix()] || "{}");
         // Migrations from old to new version control fields
         if (prefs.version) delete prefs.version;
     } catch(e) {

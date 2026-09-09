@@ -61,6 +61,7 @@ wmsx.CanvasDisplay = function(room, mainElement) {
     };
 
     this.start = function(startAction) {
+        if (WMSX.RETROM_HOST_MODE) { startAction(); return; }
         // Show mobile messages or start automatically
         if (isMobileDevice && !isBrowserStandalone && !isFullscreen) {
             // Install as App message

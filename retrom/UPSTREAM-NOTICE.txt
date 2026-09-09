@@ -1,0 +1,8 @@
+WebMSX 6.0.8 by Paulo Augusto Peccin
+Source: https://github.com/ppeccin/WebMSX
+Commit: 4f4009e86d3e0bb9be7dcd7f0a582b0cd411d660
+Upstream headers refer to license.txt, which is absent from this revision.
+License clarification: https://github.com/ppeccin/WebMSX/issues/4
+No MIT, GPL or redistribution license is asserted for WebMSX by this fork.
+This build includes upstream embedded system ROMs; those remain separate third-party works.
+Publishing this integration does not resolve or grant source or system-ROM redistribution rights.

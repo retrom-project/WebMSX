@@ -12,17 +12,20 @@ wmsx.SaveStateMedia = function(room) {
     };
 
     this.isSlotUsed = function(slot) {
+        if (WMSX.RETROM_HOST_MODE) return false;
         return localStorage["wmsxsave" + slot + ENV_SUFFIX + "u"] !== undefined || localStorage["wmsxsave" + slot + ENV_SUFFIX] !== undefined;
     };
 
     // ASSYNC!
     this.persistState = function(slot, state, then) {
+        if (WMSX.RETROM_HOST_MODE) { then(false); return; }
         var data = buildDataFromState(state);
         saveToPersistence("save" + slot + ENV_SUFFIX, data, then);
     };
 
     // ASSYNC!
     this.retrieveState = function(slot, then) {
+        if (WMSX.RETROM_HOST_MODE) { then(undefined); return; }
         loadFromPersistence("save" + slot + ENV_SUFFIX, function retrieved(data) {
             then(data && buildStateFromData(data));
         });
